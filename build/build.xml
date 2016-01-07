@@ -13,7 +13,7 @@
        
        <target name="telechargementJUnit" description="Téléchargement de JUnit" depends="checkJUnit" unless="junit.exists">
        		<echo message="Téléchargement de JUnit..."/>
-       		<get src="http://central.maven.org/maven2/junit/junit/4.4/junit-4.4.jar" dest="."></get>
+       		<get src="http://central.maven.org/maven2/junit/junit/4.4/junit-4.4.jar" dest="."/>
            	<echo message="Fait!"/>
        </target>
 </project>
