@@ -32,7 +32,7 @@ public class JoueurTest {
     /**
      * Test of convert method, of class Joueur.
      */
-    @Ignore
+    
     @Test
     public void testConvert() {
         System.out.println("convert");
@@ -46,7 +46,7 @@ public class JoueurTest {
     /**
      * Test of passer method, of class Joueur.
      */
-    @Ignore
+    
     @Test
     public void testPasser() {
         System.out.println("passer");
@@ -69,6 +69,7 @@ public class JoueurTest {
      */
 
     @Test
+    @Ignore
     public void testPoserPierre() {
         System.out.println("poser Pierre");
         
