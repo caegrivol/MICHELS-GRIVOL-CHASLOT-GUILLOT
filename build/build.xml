@@ -3,8 +3,7 @@
 <project name="MICHELS-GRIVOL-CHASLOT-GUILLOT" default="checkJUnit" basedir=".">
        <description>Projet MEDEV TP6</description>
        
-       <target name="checkJUnit"
-               description="Tester le téléchargement de JUnit">
+       <target name="checkJUnit" description="Tester le téléchargement de JUnit">
            <echo message="Test de la présence de JUnit..."/>
            <condition property="junit.exists">
                       <available file="junit-4.4.jar" type="file"/>
@@ -15,5 +14,40 @@
        		<echo message="Téléchargement de JUnit..."/>
        		<get src="http://central.maven.org/maven2/junit/junit/4.4/junit-4.4.jar" dest="."/>
            	<echo message="Fait!"/>
+       </target>
+       
+       <target name="checkDependencies"
+               description="Check if dependencies are satisfied">
+           <property name="src.location" location="src"/>
+           <property name="bin.location" location="release"/>
+           <echo message="Source directory is ${src.location}"/>
+           <condition property="src.available">
+				<and>
+                      <available file="${src.location}" type="dir"/>
+                      <available file="${bin.location}" type="dir"/>
+              	</and>
+           </condition>
+       </target>
+       <target name="build" description="Build the application"
+               depends="checkDependencies" if="src.available">
+           <echo message="Building application..."/>
+           
+           <javac srcdir="${src.location}" destdir="${bin.location}"/>
+           
+           <javadoc packagenames="tp3"
+           sourcepath="src"
+           defaultexcludes="yes"
+           destdir="release"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="Test API">
+    <doctitle><![CDATA[<h1>Jeu de Go - MICHELS-GRIVOL-CHASLOT-GUILLOT</h1>]]></doctitle>
+    <bottom><![CDATA[<i>MICHELS-GRIVOL-CHASLOT-GUILLOT</i>]]></bottom>
+    <tag name="todo" scope="all" description="To do:"/>
+    <link offline="true" href="http://docs.oracle.com/javase/7/docs/api/" packagelistLoc="C:\tmp"/>
+    <link href="http://docs.oracle.com/javase/7/docs/api/"/>
+  </javadoc>
+           <echo message="Java compilé!"/>
        </target>
 </project>
