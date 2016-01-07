@@ -1,0 +1,9 @@
+BLANC J1
+NOIR J2
+9
+5
+pose 
+J1 false B 0 0
+passe
+pose
+J1 false B 0 8
