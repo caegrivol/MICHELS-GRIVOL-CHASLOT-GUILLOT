@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="testAnt" default="build" basedir=".">
+<project name="MICHELS-GRIVOL-CHASLOT-GUILLOT" default="build" basedir=".">
        <description>Projet MEDEV TP6</description>
        
        <target name="checkJUnit"
