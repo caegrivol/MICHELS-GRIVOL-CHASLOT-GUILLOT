@@ -5,15 +5,15 @@
        
        <target name="checkJUnit"
                description="Tester le téléchargement de JUnit">
-           <echo message=""/>
+           <echo message="Test de la présence de JUnit..."/>
            <condition property="junit.exists">
-                      <available file="${src.location}" type="dir"/>
+                      <available file="junit-4.4.jar" type="file"/>
            </condition>
        </target>
        
-       <target name="telechargementJUnit" description="Téléchargement de JUnit" depends="checkJUnit" if="junit.exists">
+       <target name="telechargementJUnit" description="Téléchargement de JUnit" depends="checkJUnit" unless="junit.exists">
        		<echo message="Téléchargement de JUnit..."/>
-       		<get src="http://central.maven.org/maven2/junit/junit/4.4/junit-4. 4.jar" dest="."></get>
-           	<echo message="Done!"/>
+       		<get src="http://central.maven.org/maven2/junit/junit/4.4/junit-4.4.jar" dest="."></get>
+           	<echo message="Fait!"/>
        </target>
 </project>
