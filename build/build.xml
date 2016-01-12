@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="MICHELS-GRIVOL-CHASLOT-GUILLOT" default="checkJUnit" basedir=".">
+<project name="MICHELS-GRIVOL-CHASLOT-GUILLOT" default="build" basedir="..">
        <description>Projet MEDEV TP6</description>
  
 <!-- Définition des chemins --> 
@@ -9,79 +9,75 @@
 <property name="lib.dir" value="lib"/>
 <property name="test.dir" location="test\tp3"/>        
 <property name="release.dir" location="release"/>
+<property name="build.dir" location="build"/>
 
-<!-- Définition des répertoires -->
-<target name="Initialisation" description="Création des répertoires">
-    <mkdir dir="${build.dir}"/>
-    <mkdir dir="${jdoc.dir}"/>
+<!-- Définition du répertoire release -->
+<target name="Initialisation" description="Création du répertoire ">
     <mkdir dir="${release.dir}"/>
 </target>
 
-<!-- *********** -->
-<!-- Compilation -->
-<!-- *********** -->
-
-<!-- Definition du classpath du projet -->
-
-<path id="projet.classpath">
-<fileset dir="${lib.dir}">
-<include name="*.jar"/>
-</fileset>
-<pathelement location="${bin.dir}" />
-</path>
-
-<!-- Compilation des classes du projet -->
-<target name="compile" description="Compilation des classes">
-<javac srcdir="${src.dir}"
-destdir="${bin.dir}"
-debug="on"
-optimize="off"
-deprecation="on">
-
-<classpath refid="projet.classpath"/>
-</javac>
-</target>
- <echo message="Classes compilées!"/>
- 
- <!-- Compilation des tests du projet -->
-<target name="compileTest" description="Compilation des classes">
-<javac srcdir="${test.dir}"
-destdir="${bin.dir}"
-debug="on"
-optimize="off"
-deprecation="on">
-<classpath refid="projet.classpath"/>
-</javac>
-</target>
-
- <echo message="Tests compilés!"/>
- 
 	  
 <!-- JUnit -->
-       <target name="checkJUnit" description="Tester le téléchargement de JUnit">
-           <echo message="Test de la présence de JUnit..."/>
-           <condition property="junit.exists">
-                      <available file="junit-4.4.jar" type="file"/>
-           </condition>
-       </target>
-       
-       <target name="telechargementJUnit" description="Téléchargement de JUnit" depends="checkJUnit" unless="junit.exists">
-       		<echo message="Téléchargement de JUnit..."/>
-       		<get src="http://central.maven.org/maven2/junit/junit/4.4/junit-4.4.jar" dest="."/>
-           	<echo message="Fait!"/>
-       </target>
-	   
-   
-<!-- Javadoc -->
-<target name="javadoc" description="Création de la javadoc">
- <javadoc sourcepath="${src.dir}" destdir="${release.dir}"/>
-  </target>
+<property name="JUnit.jar" value="./lib/junit-4.4.jar"/>
+     <condition property="junit.exists">
+			<not>      
+                <available file="${JUnit.jar}" property="junit.jar.present"/>
+			</not>
+      </condition>
 
-<!-- Sonarqube -->
-<target name="sonar">
-  <exec executable="cmd">
-    <arg value="C:\sonarqube\sonar-runner-2.4\bin\sonar-runner.bat"/>
-  </exec>
+       <target name="checkJUnit" description="Tester le téléchargement de JUnit" if="JUnit.jar" depends="Initialisation" >
+           <echo message="Telechargement de JUnit"/> 
+			<get src="http://central.maven.org/maven2/junit/junit/4.4/junit-4.4.jar" dest="lib/junit-4.4.jar"/>
+       </target>
+
+	   
+<!-- Compilation et jar-->
+<target name="build" description="Build the application"
+	depends="checkJUnit">
+	
+	<echo message="Building application..."/>
+	
+	<javac srcdir="${src.dir}" 
+               destdir="${build.dir}" 
+                debug="on"
+                source="1.7"/>
+        
+		<jar destfile = "classes.jar"
+            basedir = "${src.dir}"
+            />
+			
+        <echo message="Building tests..."/>
+       
+	   <javac srcdir="${test.dir}" 
+               destdir="${test.dir}" 
+               classpath="${build.dir}"
+                debug="on"
+                source="1.7"/>
+       
+	   <jar destfile = "tests.jar"
+            basedir = "${test.dir}" 
+            />
+			
+		<antcall target="javadoc"/>
+		<antcall target="sonarqube"/>
+    </target>
+
+<!-- Javadoc -->
+
+<target name="javadoc" description="Génération de la javadoc">
+		<echo message="Génération de la javadoc"/>
+		<javadoc sourcepath="${src.dir}" destdir="${release.dir}"/>
+		<echo message="Javadoc générée dans release"/>
 </target>
+
+<!-- Sonar -->
+<target name="sonarqube">
+	<echo message="Lancement de sonarqube"/>
+	<exec executable="cmd">
+		<arg value="C:\sonarqube\sonar-runner-2.4\bin\sonar-runner.bat"/>	
+	</exec>
+	<echo message="Sonar ok"/>
+</target>
+
 
 </project>

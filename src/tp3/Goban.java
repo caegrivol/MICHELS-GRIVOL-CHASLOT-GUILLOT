@@ -419,7 +419,7 @@ public class Goban {
     public void majPierreCapturee(Jeu j) {
         
         //On vide la liste des pierres capturées au dernier coup
-        j.setPierresCapt( new ArrayList<>());
+        j.setPierresCapt( new ArrayList<Pierre>());
         majGroupe();
         int nbCap = 0;
         char coul = 'N';
