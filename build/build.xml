@@ -2,7 +2,62 @@
 
 <project name="MICHELS-GRIVOL-CHASLOT-GUILLOT" default="checkJUnit" basedir=".">
        <description>Projet MEDEV TP6</description>
-       
+ 
+<!-- Définition des chemins --> 
+<property name="src.dir" value="src"/>
+<property name="bin.dir" value="bin"/>
+<property name="lib.dir" value="lib"/>
+<property name="test.dir" location="test\tp3"/>        
+<property name="release.dir" location="release"/>
+
+<!-- Définition des répertoires -->
+<target name="Initialisation" description="Création des répertoires">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${jdoc.dir}"/>
+    <mkdir dir="${release.dir}"/>
+</target>
+
+<!-- *********** -->
+<!-- Compilation -->
+<!-- *********** -->
+
+<!-- Definition du classpath du projet -->
+
+<path id="projet.classpath">
+<fileset dir="${lib.dir}">
+<include name="*.jar"/>
+</fileset>
+<pathelement location="${bin.dir}" />
+</path>
+
+<!-- Compilation des classes du projet -->
+<target name="compile" description="Compilation des classes">
+<javac srcdir="${src.dir}"
+destdir="${bin.dir}"
+debug="on"
+optimize="off"
+deprecation="on">
+
+<classpath refid="projet.classpath"/>
+</javac>
+</target>
+ <echo message="Classes compilées!"/>
+ 
+ <!-- Compilation des tests du projet -->
+<target name="compileTest" description="Compilation des classes">
+<javac srcdir="${test.dir}"
+destdir="${bin.dir}"
+debug="on"
+optimize="off"
+deprecation="on">
+<classpath refid="projet.classpath"/>
+</javac>
+</target>
+
+ <echo message="Tests compilés!"/>
+ 
+	  
+<!-- JUnit -->
        <target name="checkJUnit" description="Tester le téléchargement de JUnit">
            <echo message="Test de la présence de JUnit..."/>
            <condition property="junit.exists">
@@ -15,39 +70,18 @@
        		<get src="http://central.maven.org/maven2/junit/junit/4.4/junit-4.4.jar" dest="."/>
            	<echo message="Fait!"/>
        </target>
-       
-       <target name="checkDependencies"
-               description="Check if dependencies are satisfied">
-           <property name="src.location" location="src"/>
-           <property name="bin.location" location="release"/>
-           <echo message="Source directory is ${src.location}"/>
-           <condition property="src.available">
-				<and>
-                      <available file="${src.location}" type="dir"/>
-                      <available file="${bin.location}" type="dir"/>
-              	</and>
-           </condition>
-       </target>
-       <target name="build" description="Build the application"
-               depends="checkDependencies" if="src.available">
-           <echo message="Building application..."/>
-           
-           <javac srcdir="${src.location}" destdir="${bin.location}"/>
-           
-           <javadoc packagenames="tp3"
-           sourcepath="src"
-           defaultexcludes="yes"
-           destdir="release"
-           author="true"
-           version="true"
-           use="true"
-           windowtitle="Test API">
-    <doctitle><![CDATA[<h1>Jeu de Go - MICHELS-GRIVOL-CHASLOT-GUILLOT</h1>]]></doctitle>
-    <bottom><![CDATA[<i>MICHELS-GRIVOL-CHASLOT-GUILLOT</i>]]></bottom>
-    <tag name="todo" scope="all" description="To do:"/>
-    <link offline="true" href="http://docs.oracle.com/javase/7/docs/api/" packagelistLoc="C:\tmp"/>
-    <link href="http://docs.oracle.com/javase/7/docs/api/"/>
-  </javadoc>
-           <echo message="Java compilé!"/>
-       </target>
+	   
+   
+<!-- Javadoc -->
+<target name="javadoc" description="Création de la javadoc">
+ <javadoc sourcepath="${src.dir}" destdir="${release.dir}"/>
+  </target>
+
+<!-- Sonarqube -->
+<target name="sonar">
+  <exec executable="cmd">
+    <arg value="C:\sonarqube\sonar-runner-2.4\bin\sonar-runner.bat"/>
+  </exec>
+</target>
+
 </project>
